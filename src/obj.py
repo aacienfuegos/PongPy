@@ -11,21 +11,38 @@ class Ball:
         self.traj = init_vel
         
     def update_pos(self, game):
-        final_x = self.pos.x + self.traj.x
-        final_y = self.pos.y + self.traj.y
+        final_pos = self.get_final_pos()
+        
+        if (self.check_point(final_pos, game)): 
+            self.pos = self.get_final_pos()
+            return True
 
-        bool_bounce_wall = final_x < 0 or final_x >= game.map.w
-        if(bool_bounce_wall): self.bounce_wall()
+        if(self.check_wall(final_pos, game)): 
+            self.bounce_wall()
+            final_pos = self.get_final_pos()
 
         for paddle in game.paddles:
-            bool_bounce_paddle = (final_y == paddle.pos.y) and (abs(final_x - paddle.pos.x) <= paddle.len/2)
-            if(bool_bounce_paddle):
+            if(self.check_paddle(final_pos, paddle)):
                 self.bounce_paddle(paddle)               
+                final_pos = self.get_final_pos()
                 break
 
-        self.pos.x += self.traj.x
-        self.pos.y += self.traj.y
+        self.pos = self.get_final_pos()
         
+        return False
+    
+    def get_final_pos(self):
+        final_x = self.pos.x + self.traj.x
+        final_y = self.pos.y + self.traj.y
+        return Position(final_x, final_y)
+
+    def check_point(self, final_pos, game):
+        return final_pos.y < 0 or final_pos.y >= game.map.h    
+    def check_wall(self, final_pos, game):
+        return final_pos.x < 0 or final_pos.x >= game.map.w
+    def check_paddle(self, final_pos, paddle):
+        return (final_pos.y == paddle.pos.y) and (abs(final_pos.x - paddle.pos.x) <= paddle.len/2)
+            
     def bounce_wall(self):
         self.traj.x *= -1
         
@@ -37,10 +54,7 @@ class Ball:
             self.traj.x = 1*sign(paddle_square)
         else:
             self.traj.x = 0
-            
-            
-        
-        
+    
             
         
 class Paddle:
