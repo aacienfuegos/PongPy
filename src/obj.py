@@ -1,10 +1,30 @@
 import math
+import math, random
 from aux import sign
 
 from dynamic import Position, Trajectory
 
-width, height = 7,7
+class Pong:
+    def __init__(self, w,h):
+        self.map = Map(w, h)
 
+        center = math.floor((w-1)/2)
+
+        init_ball_pos = Position(center, 1)
+        init_vel = Trajectory(random.randint(-1, 1), 1)
+        self.ball = Ball(init_ball_pos, init_vel)
+        
+        paddle_len = 3
+        init_paddle_pos = [Position(center, 0), Position(center, h-1)]
+        self.paddles = [Paddle(paddle_len, init_paddle_pos[0]),
+                        Paddle(paddle_len, init_paddle_pos[1])]
+        
+    def get_winner(self):
+        if(self.ball.pos.y < 0):
+            return 1
+        elif(self.ball.pos.y >= self.map.h): 
+            return 0
+        
 class Ball:
     def __init__(self, init_pos=Position(0,0), init_vel=Trajectory(0,1)):
         self.pos = init_pos
