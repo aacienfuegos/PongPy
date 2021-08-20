@@ -2,8 +2,8 @@ import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 
-from obj import Pong
 import draw
+from obj import Pong
 
 def key_handler(game):
     game_over = False
