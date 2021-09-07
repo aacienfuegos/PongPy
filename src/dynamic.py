@@ -3,6 +3,7 @@ class Position:
         self.x = x
         self.y = y
 
+
 class Trajectory:
     def __init__(self, x, y):
         self.x = x
